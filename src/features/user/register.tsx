@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import { register } from "../../remote/user-service";
+import { useNavigate } from "react-router-dom";
 
 //MaterialUI
 import Grid from '@mui/material/Grid';
@@ -10,6 +11,8 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
 function Register (){
+    const [errorMsg, setErrorMsg] = useState('');
+    const navigate = useNavigate();
 
     const handleRegister =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault();
@@ -24,10 +27,14 @@ function Register (){
                 password:data.get('password'),
             }
             register(formInfo).then((res)=>{
-                console.log(res); 
+                if (res.status===201){
+                    navigate("/login");
+                }else{
+                    setErrorMsg(res.data.message)
+                }
             });
         }else{
-            console.log(data);
+            setErrorMsg("please fill in required info.")
         }
     }
 
@@ -97,7 +104,7 @@ function Register (){
                         Sign Up
                     </Button>
                 </Grid>
-
+                {errorMsg? <Grid item xs={11} sx={{color:"red", ml:1, mb:1}}>{errorMsg}</Grid> : <></>}
                 <Grid container justifyContent="flex-end">
                     <Grid item>
                         <Link href="/login" variant="body2">

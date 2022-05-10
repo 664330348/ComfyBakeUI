@@ -1,5 +1,7 @@
+import React, {useState} from "react";
 import { login } from "../../remote/user-service";
 import { useCookies} from 'react-cookie';
+import { useNavigate } from "react-router-dom";
 
 //MaterialUI
 import Grid from '@mui/material/Grid';
@@ -10,7 +12,9 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
 function Login (){
+    const [errorMsg, setErrorMsg] = useState('');
     const [cookies, setCookie] = useCookies(["principal"]);
+    const navigate = useNavigate();
 
     const handleLogin =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault();
@@ -21,21 +25,22 @@ function Login (){
                 password:data.get('loginPassword')
             }
             login(loginInfo).then((res)=>{
-                console.log(res); 
                 if (res.status===201){
                     setCookie("principal", {token:res.headers["authorization"]});
+                    navigate("/home");
+                }else{
+                    setErrorMsg(res.data.message)
                 }
             });
         }else{
-            console.log(data);
+            setErrorMsg("please fill in username or password.")
         }
     }
 
     return(
         <Container maxWidth="xs" sx={{marginTop: 8}}>
             <h3>Login page</h3>
-            <Box component="form" noValidate onSubmit={handleLogin} 
-            >
+            <Box component="form" noValidate onSubmit={handleLogin} >
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
@@ -70,6 +75,7 @@ function Login (){
                     </Button>
                 </Grid>
 
+                {errorMsg? <Grid item xs={11} sx={{color:"red", ml:1, mb:1}}>{errorMsg}</Grid> : <></>}
                 <Grid container justifyContent="flex-end">
                     <Grid item>
                         <Link href="/register" variant="body2">
