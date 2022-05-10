@@ -14,7 +14,7 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <HomePage />
+      <App />
     </Provider>
   </React.StrictMode>
 );
