@@ -32,7 +32,7 @@ function Register (){
     }
 
     return(
-        <Container maxWidth="xs" >
+        <Container maxWidth="xs" sx={{marginTop: 8}}>
             <h3>Register page</h3>
             <Box component="form" noValidate onSubmit={handleRegister} 
             >
@@ -100,8 +100,8 @@ function Register (){
 
                 <Grid container justifyContent="flex-end">
                     <Grid item>
-                        <Link href="#" variant="body2">
-                        Already have an account? Sign in
+                        <Link href="/login" variant="body2">
+                            {"Already have an account? Sign in"}
                         </Link>
                     </Grid>
                 </Grid>
