@@ -8,6 +8,7 @@ import {
 
 import HomePage from "./Home";
 import Register from "./features/user/register";
+import Login from "./features/user/login";
 
 function App() {
   return (
@@ -17,6 +18,10 @@ function App() {
           <Route
             path="/"
             element={<HomePage/>}
+          />
+          <Route
+            path="/login"
+            element={<Login/>}
           />
           <Route
             path="/register"
