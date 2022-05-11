@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { register } from "../../remote/user-service";
+import { register,authenticate } from "../../remote/user-service";
 import { useNavigate } from "react-router-dom";
 import { useCookies} from 'react-cookie';
 
@@ -23,9 +23,13 @@ function Register (){
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        if (cookies.principal && !currentUser.token){
-            dispatch(update(cookies.principal));
-            navigate('home');
+        if (cookies.principal && (!currentUser.token || !currentUser.role)){
+            authenticate(cookies.principal.token).then((res)=>{
+                if(res.status===200){
+                    dispatch(update({token:cookies.principal.token,role:res.data.role}));
+                    navigate('home');
+                }
+            })
         }
     },[]);
 

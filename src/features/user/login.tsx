@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { login } from "../../remote/user-service";
+import { login, authenticate } from "../../remote/user-service";
 import { useCookies} from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 
@@ -23,9 +23,13 @@ function Login (){
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        if (cookies.principal && !currentUser.token){
-            dispatch(update(cookies.principal));
-            navigate('home');
+        if (cookies.principal && (!currentUser.token || !currentUser.role)){
+            authenticate(cookies.principal.token).then((res)=>{
+                if(res.status===200){
+                    dispatch(update({token:cookies.principal.token,role:res.data.role}));
+                    navigate('home');
+                }
+            })
         }
     },[]);
 
@@ -39,7 +43,7 @@ function Login (){
             }
             login(loginInfo).then((res)=>{
                 if (res.status===201){
-                    dispatch(update(res.headers["authorization"]));
+                    dispatch(update({token:res.headers["authorization"],role:res.data.role}));
                     setCookie("principal", {token:res.headers["authorization"]});
                     navigate("/home");
                 }else{

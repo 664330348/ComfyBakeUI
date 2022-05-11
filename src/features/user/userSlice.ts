@@ -3,18 +3,21 @@ import { RootState } from '../../app/store';
 
 export interface UserState{
     token: string | null;
+    role: string | null;
 }
 
 const initialState:UserState={
     token: null,
+    role: null
 }
 
 export const userSlice = createSlice({
     name:'auth',
     initialState,
     reducers:{
-        update:(state, action: PayloadAction<string>)=>{
-            state.token = action.payload;
+        update:(state, action: PayloadAction<UserState>)=>{
+            state.token = action.payload.token;
+            state.role = action.payload.role;
         },
     }
 })

@@ -3,12 +3,14 @@ import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useCookies} from 'react-cookie';
 import { useNavigate } from "react-router-dom";
@@ -117,6 +119,21 @@ function Navbar(){
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
+
+          <Button color="inherit">Orders</Button>
+
+          <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr:1 }}>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-haspopup="true"
+              color="inherit"
+            >
+              <ShoppingCartIcon />
+            </IconButton>
+          </Box>
+
           <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
             <IconButton
               size="large"

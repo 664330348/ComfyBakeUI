@@ -7,3 +7,11 @@ export const register = async (userInfo:object) => {
 export const login = async (loginInfo: object)=>{
     return await appClient.post("/users/login",loginInfo);
 }
+
+export const authenticate = async (token:string | null)=>{
+    return await appClient.get("users",{
+        headers:{
+            'Authorization':`${token}`
+        }
+    })
+}
