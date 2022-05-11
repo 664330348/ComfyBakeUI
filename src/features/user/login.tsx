@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { login } from "../../remote/user-service";
 import { useCookies} from 'react-cookie';
 import { useNavigate } from "react-router-dom";
@@ -11,10 +11,23 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
+//Redux
+import {useSelector, useDispatch} from 'react-redux';
+import {update, selectUser} from './userSlice';
+
 function Login (){
     const [errorMsg, setErrorMsg] = useState('');
     const [cookies, setCookie] = useCookies(["principal"]);
+    const currentUser = useSelector(selectUser);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        if (cookies.principal && !currentUser.token){
+            dispatch(update(cookies.principal));
+            navigate('home');
+        }
+    },[]);
 
     const handleLogin =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault();
@@ -26,6 +39,7 @@ function Login (){
             }
             login(loginInfo).then((res)=>{
                 if (res.status===201){
+                    dispatch(update(res.headers["authorization"]));
                     setCookie("principal", {token:res.headers["authorization"]});
                     navigate("/home");
                 }else{

@@ -10,7 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-
+import { useCookies} from 'react-cookie';
+import { useNavigate } from "react-router-dom";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -54,8 +55,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 function Navbar(){
+  const [cookies, setCookie, removeCookie] = useCookies(["principal"]);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event:any) => {
     setAnchorEl(event.currentTarget);
@@ -65,6 +68,10 @@ function Navbar(){
     setAnchorEl(null);
   };
 
+  const handleLogout =()=>{
+    removeCookie("principal");
+    navigate("/login");
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -84,7 +91,7 @@ function Navbar(){
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
 

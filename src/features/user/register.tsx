@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { register } from "../../remote/user-service";
 import { useNavigate } from "react-router-dom";
+import { useCookies} from 'react-cookie';
 
 //MaterialUI
 import Grid from '@mui/material/Grid';
@@ -10,9 +11,23 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
+//Redux
+import {useSelector, useDispatch} from 'react-redux';
+import {update, selectUser} from './userSlice';
+
 function Register (){
     const [errorMsg, setErrorMsg] = useState('');
+    const [cookies] = useCookies(["principal"]);
+    const currentUser = useSelector(selectUser);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        if (cookies.principal && !currentUser.token){
+            dispatch(update(cookies.principal));
+            navigate('home');
+        }
+    },[]);
 
     const handleRegister =(event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault();
