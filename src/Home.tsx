@@ -1,18 +1,19 @@
-import Button from '@mui/material/Button';
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import {authenticate } from "./remote/user-service";
-import Register from './features/user/register';
-import Navbar from './features/navbar';
+import {getAllBakedGoods} from "./remote/product-sevice";
 import { useNavigate } from "react-router-dom";
 import { useCookies} from 'react-cookie';
-
+import { selectProducts, productInfor,updateProducts} from './features/product/productSlice';
 //redux
 import {useSelector, useDispatch} from 'react-redux';
-import {selectUser, update} from './features/user/userSlice';
+import {selectUser, updateUserInfor} from './features/user/userSlice';
+//MUI
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 
 function HomePage(){
     const currentUser = useSelector(selectUser);
+    const products = useSelector(selectProducts);
     const [cookies, setCookie, removeCookie] = useCookies(["principal"]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -23,17 +24,40 @@ function HomePage(){
         }else if (!currentUser.token || !currentUser.role){
             authenticate(cookies.principal.token).then((res)=>{                
                 if(res.status===200){
-                    dispatch(update({token:cookies.principal.token,role:res.data.role}));
+                    dispatch(updateUserInfor({token:cookies.principal.token,role:res.data.role}));
                     navigate('home');
                 }
             })
+        }
+
+        if(cookies.principal && products.length===0){
+            getAllBakedGoods(cookies.principal.token).then((res)=>{
+                console.log(res);
+                dispatch(updateProducts(res.data.AllBakedGoods));
+            });
         }
     },[]);
 
     return(
         <div>
-            <Navbar/>
-            <h1>Home page</h1> 
+            <Grid sx={{ flexGrow: 1,m:3 }} container >
+                <Grid item xs={12}>
+                    <Grid container justifyContent="center" spacing={5}>
+                    {products.map((value) => (
+                        <Grid key={value.bakeId} item>
+                        <Paper
+                            sx={{
+                            height: 300,
+                            width: 200,
+                            backgroundColor: (theme) =>
+                                theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                            }}
+                        />
+                        </Grid>
+                    ))}
+                    </Grid>
+                </Grid>
+            </Grid>
         </div>
     )
 }

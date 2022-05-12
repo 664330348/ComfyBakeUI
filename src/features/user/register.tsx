@@ -13,7 +13,7 @@ import Link from '@mui/material/Link';
 
 //Redux
 import {useSelector, useDispatch} from 'react-redux';
-import {update, selectUser} from './userSlice';
+import {updateUserInfor, selectUser} from './userSlice';
 
 function Register (){
     const [errorMsg, setErrorMsg] = useState('');
@@ -26,7 +26,7 @@ function Register (){
         if (cookies.principal && (!currentUser.token || !currentUser.role)){
             authenticate(cookies.principal.token).then((res)=>{
                 if(res.status===200){
-                    dispatch(update({token:cookies.principal.token,role:res.data.role}));
+                    dispatch(updateUserInfor({token:cookies.principal.token,role:res.data.role}));
                     navigate('home');
                 }
             })

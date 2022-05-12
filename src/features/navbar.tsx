@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -13,7 +13,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useCookies} from 'react-cookie';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
+import {authenticate } from "../remote/user-service";
+//redux
+import {useSelector, useDispatch} from 'react-redux';
+import {selectUser, updateUserInfor, clearUserInfor} from './user/userSlice';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -61,6 +65,21 @@ function Navbar(){
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const navigate = useNavigate();
+  const currentUser = useSelector(selectUser);
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    if(!cookies.principal){
+        navigate('login');
+    }else if (!currentUser.token || !currentUser.role){
+        authenticate(cookies.principal.token).then((res)=>{                
+            if(res.status===200){
+                dispatch(updateUserInfor({token:cookies.principal.token,role:res.data.role}));
+                navigate('home');
+            }
+        })
+    }
+  },[]);
 
   const handleProfileMenuOpen = (event:any) => {
     setAnchorEl(event.currentTarget);
@@ -72,7 +91,9 @@ function Navbar(){
 
   const handleLogout =()=>{
     removeCookie("principal");
+    dispatch(clearUserInfor());
     navigate("/login");
+
   }
 
   const menuId = 'primary-search-account-menu';
@@ -98,6 +119,7 @@ function Navbar(){
   );
 
   return (
+    <>
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
@@ -151,6 +173,8 @@ function Navbar(){
       </AppBar>
       {renderMenu}
     </Box>
+    <Outlet />
+    </>
   );
 }
 export default Navbar;

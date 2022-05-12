@@ -15,12 +15,16 @@ export const userSlice = createSlice({
     name:'auth',
     initialState,
     reducers:{
-        update:(state, action: PayloadAction<UserState>)=>{
+        updateUserInfor:(state, action: PayloadAction<UserState>)=>{
             state.token = action.payload.token;
             state.role = action.payload.role;
         },
+        clearUserInfor:(state)=>{
+            state.token=null;
+            state.role=null;
+        }
     }
 })
 export const selectUser = (state: RootState)=> state.user;
-export const { update } = userSlice.actions;
+export const { updateUserInfor,clearUserInfor } = userSlice.actions;
 export default userSlice.reducer;
