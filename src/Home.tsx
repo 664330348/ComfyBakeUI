@@ -11,6 +11,8 @@ import {selectUser, updateUserInfor} from './features/user/userSlice';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 
+import ProductCard from "./features/product/productCard";
+
 function HomePage(){
     const currentUser = useSelector(selectUser);
     const products = useSelector(selectProducts);
@@ -43,16 +45,18 @@ function HomePage(){
             <Grid sx={{ flexGrow: 1,m:3 }} container >
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" spacing={5}>
-                    {products.map((value) => (
-                        <Grid key={value.bakeId} item>
-                        <Paper
-                            sx={{
-                            height: 300,
-                            width: 200,
-                            backgroundColor: (theme) =>
-                                theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                            }}
-                        />
+                    {products.map((product) => (
+                        <Grid key={product.bakeId} item>
+                            <ProductCard
+                                bakeId =  {product.bakeId}
+                                bakeName = {product.bakeName}
+                                described = {product.described}
+                                image = {product.image}
+                                price = {product.price}
+                                quantity = {product.quantity}
+                                recipe = {product.recipe}
+                                userProfile = {product.userProfile}
+                            />
                         </Grid>
                     ))}
                     </Grid>

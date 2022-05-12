@@ -13,7 +13,7 @@ export interface productInfor{
     bakeId: string | null;
     bakeName: string | null;
     described: string | null;
-    image: string | null;
+    image: string | undefined;
     price: number | null;
     quantity: number | null;
     recipe: string | null;
