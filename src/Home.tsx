@@ -42,7 +42,7 @@ function HomePage(){
 
     return(
         <div>
-            <Grid sx={{ flexGrow: 1,m:3 }} container >
+            <Grid sx={{ flexGrow: 1,p:3 }} container >
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" spacing={5}>
                     {products.map((product) => (
