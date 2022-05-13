@@ -1,23 +1,32 @@
 import React, {useState, useEffect} from "react";
+import { useCookies} from 'react-cookie';
+import { useNavigate, Outlet } from "react-router-dom";
+
+//MUI
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { useCookies} from 'react-cookie';
-import { useNavigate, Outlet } from "react-router-dom";
-import {authenticate } from "../remote/user-service";
+import Badge from '@mui/material/Badge';
+
 //redux
 import {useSelector, useDispatch} from 'react-redux';
 import {selectUser, updateUserInfor, clearUserInfor} from './user/userSlice';
+import {selectProducts, updateProducts} from './product/productSlice';
+import {selectProfile, updateProfile} from "./profile/profileSlice";
+
+//axios
+import {getAllBakedGoods} from "../remote/product-sevice";
+import {authenticate, getUserProfile} from "../remote/user-service";
+import { profile } from "console";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -59,26 +68,55 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+  },
+}));
+
 
 function Navbar(){
   const [cookies, setCookie, removeCookie] = useCookies(["principal"]);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const navigate = useNavigate();
-  const currentUser = useSelector(selectUser);
   const dispatch = useDispatch();
+
+  const currentUser = useSelector(selectUser);
+  const products = useSelector(selectProducts);
+  const userProfile = useSelector(selectProfile);
 
   useEffect(()=>{
     if(!cookies.principal){
         navigate('login');
-    }else if (!currentUser.token || !currentUser.role){
+    }else{
+      if (!currentUser.token || !currentUser.role){
         authenticate(cookies.principal.token).then((res)=>{                
             if(res.status===200){
                 dispatch(updateUserInfor({token:cookies.principal.token,role:res.data.role}));
-                navigate('home');
             }
         })
-    }
+      }
+      if(products.length===0){
+        getAllBakedGoods(cookies.principal.token).then((res)=>{
+          if(res.status===200){
+            dispatch(updateProducts(res.data.AllBakedGoods));
+          }
+        });
+      }
+
+      if(!userProfile.firstname || !userProfile.lastname){
+        getUserProfile(cookies.principal.token).then((res)=>{
+          if(res.status===200){
+            dispatch(updateProfile(res.data.profileResponse));
+          }
+        });
+      }
+    } 
+    console.log("here");
   },[]);
 
   const handleProfileMenuOpen = (event:any) => {
@@ -93,6 +131,12 @@ function Navbar(){
     removeCookie("principal");
     dispatch(clearUserInfor());
     navigate("/login");
+
+  }
+
+  const jumpToProfile =()=>{
+    setAnchorEl(null);
+    navigate("/profile");
 
   }
 
@@ -113,7 +157,7 @@ function Navbar(){
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={jumpToProfile}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
@@ -123,14 +167,12 @@ function Navbar(){
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
+          <IconButton
             sx={{ display: { xs: 'none', sm: 'block' } }}
+            onClick={()=>{navigate('/')}}
           >
             ComfyBake
-          </Typography>
+          </IconButton>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -152,7 +194,9 @@ function Navbar(){
               aria-haspopup="true"
               color="inherit"
             >
-              <ShoppingCartIcon />
+              <StyledBadge badgeContent={0} color="secondary">
+                <ShoppingCartIcon />
+              </StyledBadge>
             </IconButton>
           </Box>
 

@@ -15,3 +15,19 @@ export const authenticate = async (token:string | null)=>{
         }
     })
 }
+
+export const getUserProfile = async(token:string | null)=>{
+    return await appClient.get("users/profile",{
+        headers:{
+            'Authorization':`${token}`
+        }
+    })
+}
+
+export const updateUserProfile =async (token:string | null, newProfileInfo:object) => {
+    return await appClient.put("users/profile", newProfileInfo,{
+        headers:{
+            'Authorization':`${token}`
+        }
+    })
+}

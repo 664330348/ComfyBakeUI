@@ -10,6 +10,7 @@ import HomePage from "./Home";
 import Register from "./features/user/register";
 import Login from "./features/user/login";
 import Navbar from "./features/navbar";
+import Profile from "./features/profile/profile";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navbar/>}>
             <Route index  element={<HomePage/>}/>
+            <Route path="/profile" element={<Profile/>}/>
           </Route>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
