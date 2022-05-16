@@ -22,11 +22,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import {selectUser, updateUserInfor, clearUserInfor} from './user/userSlice';
 import {selectProducts, updateProducts} from './product/productSlice';
 import {selectProfile, updateProfile} from "./profile/profileSlice";
+import {selectOrderHistory, updateOrderHistory, clearOrderHistory} from "./orderHistory/ordersSlice";
 
 //axios
-import {getAllBakedGoods} from "../remote/product-sevice";
+import {getAllBakedGoods, getOrderHistory} from "../remote/product-sevice";
 import {authenticate, getUserProfile} from "../remote/user-service";
-import { profile } from "console";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -88,6 +88,7 @@ function Navbar(){
   const currentUser = useSelector(selectUser);
   const products = useSelector(selectProducts);
   const userProfile = useSelector(selectProfile);
+  const orders = useSelector(selectOrderHistory);
 
   useEffect(()=>{
     if(!cookies.principal){
@@ -107,7 +108,6 @@ function Navbar(){
           }
         });
       }
-
       if(!userProfile.firstname || !userProfile.lastname){
         getUserProfile(cookies.principal.token).then((res)=>{
           if(res.status===200){
@@ -115,8 +115,14 @@ function Navbar(){
           }
         });
       }
+      getOrderHistory(cookies.principal.token).then((res)=>{
+        if(res.status===200){
+          console.log(res);
+          
+          dispatch(updateOrderHistory(res.data.OrderHistoryResponses));
+        }
+      })
     } 
-    console.log("here");
   },[]);
 
   const handleProfileMenuOpen = (event:any) => {
@@ -184,7 +190,7 @@ function Navbar(){
           </Search>
           <Box sx={{ flexGrow: 1 }} />
 
-          <Button color="inherit">Orders</Button>
+          <Button color="inherit" onClick={()=>{navigate("/orders");}}>Orders</Button>
 
           <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr:1 }}>
             <IconButton

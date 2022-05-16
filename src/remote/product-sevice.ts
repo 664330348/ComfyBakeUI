@@ -1,5 +1,4 @@
 import { appClient } from "./app-client";
-import { productInfor} from '../features/product/productSlice';
 
 
 export const getAllBakedGoods = async (token:string | null)=>{
@@ -9,3 +8,12 @@ export const getAllBakedGoods = async (token:string | null)=>{
         }
     })
 }
+
+export const getOrderHistory =async (token:string | null) => {
+    return await appClient.get("baked-goods/history",{
+        headers:{
+            'Authorization':`${token}`
+        }
+    })
+}
+
