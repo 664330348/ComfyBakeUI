@@ -20,9 +20,9 @@ import Badge from '@mui/material/Badge';
 //redux
 import {useSelector, useDispatch} from 'react-redux';
 import {selectUser, updateUserInfor, clearUserInfor} from './user/userSlice';
-import {selectProducts, updateProducts} from './product/productSlice';
-import {selectProfile, updateProfile} from "./profile/profileSlice";
-import {selectOrderHistory, updateOrderHistory, clearOrderHistory} from "./orderHistory/ordersSlice";
+import {selectProducts, updateProducts, clearProducts} from './product/productSlice';
+import {selectProfile, updateProfile, clearProfile} from "./profile/profileSlice";
+import {updateOrderHistory, clearOrderHistory} from "./orderHistory/ordersSlice";
 
 //axios
 import {getAllBakedGoods, getOrderHistory} from "../remote/product-sevice";
@@ -88,7 +88,6 @@ function Navbar(){
   const currentUser = useSelector(selectUser);
   const products = useSelector(selectProducts);
   const userProfile = useSelector(selectProfile);
-  const orders = useSelector(selectOrderHistory);
 
   useEffect(()=>{
     if(!cookies.principal){
@@ -116,9 +115,7 @@ function Navbar(){
         });
       }
       getOrderHistory(cookies.principal.token).then((res)=>{
-        if(res.status===200){
-          console.log(res);
-          
+        if(res.status===200){          
           dispatch(updateOrderHistory(res.data.OrderHistoryResponses));
         }
       })
@@ -136,8 +133,10 @@ function Navbar(){
   const handleLogout =()=>{
     removeCookie("principal");
     dispatch(clearUserInfor());
+    dispatch(clearOrderHistory());
+    dispatch(clearProfile());
+    dispatch(clearProducts());
     navigate("/login");
-
   }
 
   const jumpToProfile =()=>{
