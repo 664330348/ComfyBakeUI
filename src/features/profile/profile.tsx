@@ -34,9 +34,7 @@ function Profile (){
             lastname: data.get("editLastName"), 
             email: data.get("editEmail"),
             photo: null
-        }
-        console.log("newProfileInfo.email",newProfileInfo.email,"das");
-        
+        }        
         updateUserProfile(cookies.principal.token, newProfileInfo).then((res)=>{
             if(res.status===201){
                 dispatch(updateProfile(newProfileInfo));
