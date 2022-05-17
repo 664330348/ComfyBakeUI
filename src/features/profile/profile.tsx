@@ -16,7 +16,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 //redux
 import {useSelector, useDispatch} from 'react-redux';
-import {selectProfile, updateProfile, profileInfor} from './profileSlice';
+import {selectProfile, updateProfile} from './profileSlice';
 
 function Profile (){
     const [errorMsg, setErrorMsg] = useState('');

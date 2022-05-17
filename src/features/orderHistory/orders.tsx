@@ -1,4 +1,3 @@
-import { useCookies} from 'react-cookie';
 import { nanoid } from '@reduxjs/toolkit'
 
 //MUI
@@ -14,7 +13,6 @@ import {useSelector} from 'react-redux';
 import { selectOrderHistory} from "./ordersSlice";
 
 export default function Orders (){
-    const [cookies] = useCookies(["principal"]);
     const orders = useSelector(selectOrderHistory);
 
     const eachOrder = orders.map(order=>(
