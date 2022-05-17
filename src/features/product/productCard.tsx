@@ -12,8 +12,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
+//redux
+import { useDispatch } from 'react-redux';
 import { productInfor} from './productSlice';
-
+import { addItem, shoppingItemState } from '../shoppingcart/shoppingCartSlice';
 
 const ExpandMore = styled((props:any) => {
   const { expand, ...other } = props;
@@ -28,6 +30,20 @@ const ExpandMore = styled((props:any) => {
 
 export default function ProductCard(props:productInfor) {
   const [expanded, setExpanded] = React.useState(false);
+  const dispatch = useDispatch();
+
+  const handleAddItem =()=>{
+    let item:shoppingItemState={
+      bakeId: props.bakeId,
+      bakeName: props.bakeName,
+      image: props.image,
+      price: props.price,
+      quantity: props.quantity,
+      purchase: 1,
+      userProfileId: props.userProfile.userProfileId
+    };
+    dispatch(addItem(item));
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -53,8 +69,11 @@ export default function ProductCard(props:productInfor) {
       <CardActions disableSpacing>
         <MonetizationOnIcon sx={{ mr:0.2}}/>{props.price}
         <p style={{margin:"0 25px"}}>{`${props.quantity} left `}</p>
-        <IconButton aria-label="add to shoppingCart">
-          <AddShoppingCartIcon />
+        <IconButton 
+          aria-label="add to shoppingCart"
+          onClick={handleAddItem}
+        >
+          <AddShoppingCartIcon/>
         </IconButton>
 
         <ExpandMore

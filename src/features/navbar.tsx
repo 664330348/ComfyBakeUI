@@ -23,6 +23,7 @@ import {selectUser, updateUserInfor, clearUserInfor} from './user/userSlice';
 import {selectProducts, updateProducts, clearProducts} from './product/productSlice';
 import {selectProfile, updateProfile, clearProfile} from "./profile/profileSlice";
 import {updateOrderHistory, clearOrderHistory} from "./orderHistory/ordersSlice";
+import { selectShoppingItems, addItem} from "./shoppingcart/shoppingCartSlice";
 
 //axios
 import {getAllBakedGoods, getOrderHistory} from "../remote/product-sevice";
@@ -88,6 +89,7 @@ function Navbar(){
   const currentUser = useSelector(selectUser);
   const products = useSelector(selectProducts);
   const userProfile = useSelector(selectProfile);
+  const shoppingItems = useSelector(selectShoppingItems);
 
   useEffect(()=>{
     if(!cookies.principal){
@@ -198,6 +200,8 @@ function Navbar(){
               aria-label="account of current user"
               aria-haspopup="true"
               color="inherit"
+              onClick={()=>{console.log(shoppingItems);
+              }}
             >
               <StyledBadge badgeContent={0} color="secondary">
                 <ShoppingCartIcon />
