@@ -11,6 +11,7 @@ import Login from "./features/user/login";
 import Navbar from "./features/navbar";
 import Profile from "./features/profile/profile";
 import Orders from "./features/orderHistory/orders";
+import ShoppingCart from "./features/shoppingcart/shoppingCart";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route index  element={<HomePage/>}/>
             <Route path="/profile" element={<Profile/>}/>
             <Route path="/orders" element={<Orders/>}/>
+            <Route path="/shoppingCart" element={<ShoppingCart/>}/>
           </Route>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>

@@ -200,8 +200,7 @@ function Navbar(){
               aria-label="account of current user"
               aria-haspopup="true"
               color="inherit"
-              onClick={()=>{console.log(shoppingItems);
-              }}
+              onClick={()=>{navigate("/shoppingCart");}}
             >
               <StyledBadge badgeContent={0} color="secondary">
                 <ShoppingCartIcon />
