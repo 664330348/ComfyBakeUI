@@ -23,7 +23,7 @@ import {selectUser, updateUserInfor, clearUserInfor} from './user/userSlice';
 import {selectProducts, updateProducts, clearProducts} from './product/productSlice';
 import {selectProfile, updateProfile, clearProfile} from "./profile/profileSlice";
 import {updateOrderHistory, clearOrderHistory} from "./orderHistory/ordersSlice";
-import { selectShoppingItems, addItem} from "./shoppingcart/shoppingCartSlice";
+import { selectShoppingItems} from "./shoppingcart/shoppingCartSlice";
 
 //axios
 import {getAllBakedGoods, getOrderHistory} from "../remote/product-sevice";
@@ -202,7 +202,7 @@ function Navbar(){
               color="inherit"
               onClick={()=>{navigate("/shoppingCart");}}
             >
-              <StyledBadge badgeContent={0} color="secondary">
+              <StyledBadge badgeContent={shoppingItems.length/2} color="secondary">
                 <ShoppingCartIcon />
               </StyledBadge>
             </IconButton>

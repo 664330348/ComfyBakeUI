@@ -56,8 +56,11 @@ export const shoppingCartSlice = createSlice({
                 }
             }
         },
+        clearShoppingCart:(state)=>{
+            state.length=0;
+        }
     }
 })
 export const selectShoppingItems = (state:RootState)=>state.shoppingItems;
-export const {addItem, removeItem, decreaseByOne, increaseByOne} = shoppingCartSlice.actions;
+export const {addItem, removeItem, decreaseByOne, increaseByOne, clearShoppingCart} = shoppingCartSlice.actions;
 export default shoppingCartSlice.reducer;

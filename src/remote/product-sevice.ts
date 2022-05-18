@@ -17,3 +17,11 @@ export const getOrderHistory =async (token:string | null) => {
     })
 }
 
+export const shopping = async(token:string | null, shoppingList:object)=>{
+    return await appClient.put("baked-goods",shoppingList,{
+        headers:{
+            'Authorization':`${token}`
+        }
+    })
+}
+
