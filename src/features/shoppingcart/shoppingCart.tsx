@@ -1,7 +1,8 @@
 import { nanoid } from '@reduxjs/toolkit'
 import React, {useState} from "react";
-import { shopping ,getOrderHistory} from '../../remote/product-sevice';
+import { shopping ,getOrderHistory, getAllBakedGoods} from '../../remote/product-sevice';
 import { useCookies} from 'react-cookie';
+
 //MUI
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
@@ -23,6 +24,7 @@ import Paper from '@mui/material/Paper';
 import {useSelector, useDispatch} from 'react-redux';
 import { selectShoppingItems, removeItem, decreaseByOne, increaseByOne, clearShoppingCart} from "./shoppingCartSlice";
 import { updateOrderHistory } from '../orderHistory/ordersSlice';
+import { updateProducts } from '../product/productSlice';
 
 export default function ShoppingCart (){
     const [cookies] = useCookies(["principal"]);
@@ -44,6 +46,12 @@ export default function ShoppingCart (){
                 getOrderHistory(cookies.principal.token).then((res)=>{
                     if(res.status===200){          
                       dispatch(updateOrderHistory(res.data.OrderHistoryResponses));
+                    }
+                });
+
+                getAllBakedGoods(cookies.principal.token).then((res)=>{
+                    if(res.status===200){
+                      dispatch(updateProducts(res.data.AllBakedGoods));
                     }
                 });
 
@@ -143,7 +151,7 @@ export default function ShoppingCart (){
             :
             <Grid sx={{display: 'flex', justifyContent:'center', mt:5}} container >
                 <Alert variant="outlined" severity="info" >
-                    You have not ordered anything yet.
+                    You have nothing in your shopping cart.
                 </Alert>
             </Grid>
     )
